@@ -1,8 +1,8 @@
-statrave: clean
-	ghc -tmpdir /tmp -odir /tmp -o statrave src/main.hs
+.PHONY: clean
 
-run: statrave
-	cat ~/.workrave/historystats | ./statrave
+
+strave: clean
+	ghc -o strave-parse src/main.hs
 
 clean:
-	[ -f ./statrave ] && rm ./statrave || true
+	[ -f ./strave-parse ] && rm ./strave-parse || true

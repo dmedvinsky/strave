@@ -1,0 +1,3 @@
+#!/bin/sh
+dir=`dirname $0`
+cat $HOME/.workrave/historystats | $dir/strave-parse
