@@ -1,10 +1,43 @@
 module Main (main) where
 
 import Data.Time (readTime, UTCTime, NominalDiffTime, diffUTCTime)
+import System.FilePath
+import System.Environment (getProgName, getArgs, getEnv)
+import System.IO
 import System.Locale (defaultTimeLocale)
 
 
-main = interact processInput
+main :: IO ()
+main = do
+    args <- getArgs
+    case args of
+        []      -> doIt stdin
+        "-h":_  -> usage
+        "-d":_  -> defaultFilePath >>= doItFile
+        file:_  -> doItFile file
+  where
+    doIt :: Handle -> IO ()
+    doIt h = do
+        input <- hGetContents h
+        putStrLn $ processInput input
+    doItFile :: FilePath -> IO ()
+    doItFile path = withFile path ReadMode doIt
+    usage :: IO ()
+    usage = do
+        name <- getProgName
+        putStrLn $
+            "Usage: " ++ name ++ " [-d|/path/to/historystats]\n\n\
+                \    -h    Display this help and quit\n\
+                \    -d    Default historystats ($HOME/.workrave/historystats) file is used\n\
+                \    /path/to/historystats\n\
+                \          Use path as historystats file\n\n\
+                \    With no arguments stdin is read."
+
+
+defaultFilePath :: IO FilePath
+defaultFilePath = do
+    home <- getEnv "HOME"
+    return $ home </> ".workrave" </> "historystats"
 
 
 processInput :: String -> String
