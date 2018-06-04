@@ -22,16 +22,18 @@ main = do
         putStrLn $ processInput input
     doItFile :: FilePath -> IO ()
     doItFile path = withFile path ReadMode doIt
-    usage :: IO ()
-    usage = do
-        name <- getProgName
-        putStrLn $
-            "Usage: " ++ name ++ " [-d|/path/to/historystats]\n\n\
-                \    -h    Display this help and quit\n\
-                \    -d    Default historystats ($HOME/.workrave/historystats) file is used\n\
-                \    /path/to/historystats\n\
-                \          Use path as historystats file\n\n\
-                \    With no arguments stdin is read."
+
+
+usage :: IO ()
+usage = do
+    name <- getProgName
+    putStrLn $
+        "Usage: " ++ name ++ " [-d|/path/to/historystats]\n\n\
+            \    -h    Display this help and quit\n\
+            \    -d    Default historystats ($HOME/.workrave/historystats) file is used\n\
+            \    /path/to/historystats\n\
+            \          Use path as historystats file\n\n\
+            \    With no arguments stdin is read."
 
 
 defaultFilePath :: IO FilePath
@@ -76,4 +78,4 @@ buildResult = unlines . map f
                          diff = e `diffUTCTime` s
                          hrs = hours diff
                          mins = (minutes diff) - hrs * 60
-                      in date ++ " — " ++ pad (show hrs) ++ ":" ++ pad (show mins)
+                      in date ++ ": [" ++ show s ++ "—" ++ show e ++ "] " ++ pad (show hrs) ++ ":" ++ pad (show mins)
